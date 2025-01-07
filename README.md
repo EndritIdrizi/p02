@@ -1,14 +1,26 @@
 # P02 - Makers Makin' It, Act I - Team JBEE
 
-TNPG - JBEE
-Roster:
-- Endrit Idrizi (PM)
+** Team JBEE ** (Jay-Bee)
+
+## Roster:
+- Endrit Idrizi **(PM)**
 - Ziyad Hamed
 - Vedant Kotheri
 - Benjamin Rudinski
-Description:
-We will create a site that allows you to create custom wordles, connections, and mini crosswords and play others creations.
 
+## Description:
+We are building an innovative platform that allows users to create and share their own custom Wordles, Connections puzzles, and mini crosswords, etc. Users can design personalized puzzles with customizable words, themes, and difficulty levels, making each game a tailored experience. You can also listen to all of British Rapper JBEE's top singles to help improve your creative energy and spirit.
+
+** Songs will include **:
+- 4am - JBEE
+- SCAR - Song Bird, Gyakie & JBEE
+- Talking Stage - JBEE
+- Just 4 Me - JBEE
+- Changed - JBEE & CRYSTAL MILLZ
+- Next Up - S4-E2, Pt. 2 - JBEE
+- Heart On Ice - JBEE
+- With Me Or Not? - JBEE
+  
 ---  
 
 ## Install Guide [w.i.p]
