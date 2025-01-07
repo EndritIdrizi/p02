@@ -1,6 +1,6 @@
 # P02 - Makers Makin' It, Act I - Team JBEE
 
-** Team JBEE ** (Jay-Bee)
+**Team JBEE** (Jay-Bee)
 
 ## Roster:
 - Endrit Idrizi **(PM)**
@@ -11,7 +11,7 @@
 ## Description:
 We are building an innovative platform that allows users to create and share their own custom Wordles, Connections puzzles, and mini crosswords, etc. Users can design personalized puzzles with customizable words, themes, and difficulty levels, making each game a tailored experience. You can also listen to all of British Rapper JBEE's top singles to help improve your creative energy and spirit.
 
-** Songs will include **:
+**Songs will include**:
 - 4am - JBEE
 - SCAR - Song Bird, Gyakie & JBEE
 - Talking Stage - JBEE
