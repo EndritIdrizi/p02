@@ -11,12 +11,15 @@
 ## Roles: 
 Vedant Kothari
 - Frontend (CSS + FEF)
+
 Endrit Idrizi
 - JavaScript
 - Frontend (HTML Templates)
 - API Configurations and Connections
+
 Benjamin Rudinski
 - Set up Flask and SQLite3 environment
+
 Ziyad Hamed
 - Build user authentication functionality
 - Middleware file organization
