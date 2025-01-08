@@ -1,6 +1,13 @@
-vedantK -- 2025-01-07 11:25
-  * Wrote project description and worked on formatting design document
-  * Updated README with new description and roles
 benR -- 2025-01-07 18:31
   * Created devlog.txt
   * Fixed readme
+
+vedantK -- 2025-01-07 11:25
+  * Wrote project description and worked on formatting design document
+  * Updated README with new description and roles
+
+benR -- 2025-01-08 18:20
+  * Created config.py with beginning db setup and secret key activations
+  * Created basic __init__.py with imports, home route, and simple decorators
+  * Create app folder to hold project
+  
