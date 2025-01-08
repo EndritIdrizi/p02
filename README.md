@@ -8,18 +8,33 @@
 - Vedant Kotheri
 - Benjamin Rudinski
 
-## Description:
-We are building an innovative platform that allows users to create and share their own custom Wordles, Connections puzzles, and mini crosswords, etc. Users can design personalized puzzles with customizable words, themes, and difficulty levels, making each game a tailored experience. You can also listen to all of British Rapper JBEE's top singles to help improve your creative energy and spirit.
+## Roles: 
+Vedant Kothari
+- Frontend (CSS + FEF)
+Endrit Idrizi
+- JavaScript
+- Frontend (HTML Templates)
+- API Configurations and Connections
+Benjamin Rudinski
+- Set up Flask and SQLite3 environment
+Ziyad Hamed
+- Build user authentication functionality
+- Middleware file organization
+- Build database
 
-**Songs will include**:
-- 4am - JBEE
-- SCAR - Song Bird, Gyakie & JBEE
-- Talking Stage - JBEE
-- Just 4 Me - JBEE
-- Changed - JBEE & CRYSTAL MILLZ
-- Next Up - S4-E2, Pt. 2 - JBEE
-- Heart On Ice - JBEE
-- With Me Or Not? - JBEE
+## Description:
+Our project is essentially a more advanced version of the New York Times ‘Games’ section. It will contain games such as Wordle, Mini Crossword, and Connections. Each of these games will have the same rules and instructions as those found on the official NYT website, but in our website, the kick is that any user can create and customize their own games. In fact, they can publish it to the site to make it accessible for other users to play as well, providing that they are logged in properly. Regarding the APIs, we will be using Merriam Webster Dictionary API. It will be used to check for correctness in words. By logging in, users will have the ability to create their own games as well as view their completed games from the past. We might even implement a feature with credits, where users can earn credits based on the games they play, difficulty, and time played, but this feature will not be possible if you aren’t logged in. In addition, in times of happiness, the following songs could be played as a sign of congratulations: 
+Protagonist - Blanco
+Evicted - Nemmzz
+4am - JBEE
+SCAR - Song Bird, Gyakie & JBEE
+Talking Stage - JBEE
+Just 4 Me - JBEE
+Changed - JBEE & CRYSTAL MILLZ
+Next Up - S4-E2, Pt. 2 - JBEE
+Heart On Ice - JBEE
+With Me Or Not? - JBEE
+
   
 ---  
 
