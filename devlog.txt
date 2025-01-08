@@ -1,3 +1,6 @@
+vedantK -- 2025-01-07 11:25
+  * Wrote project description and worked on formatting design document
+  * Updated README with new description and roles
 benR -- 2025-01-07 18:31
   * Created devlog.txt
   * Fixed readme
