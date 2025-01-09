@@ -6,15 +6,18 @@ P02
 Time Spent: 0.5
 '''
 
-import os
+import os, sys
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from config import Config  # Ensure config.py is in the correct directory
+import config
 from functools import wraps
+
+# adding config.py to search path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Flask app initialization
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(config.Config)
 
 # Database configuration
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
