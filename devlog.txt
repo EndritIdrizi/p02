@@ -10,6 +10,9 @@ benR -- 2025-01-08 18:20
   * Created config.py with beginning db setup and secret key activations
   * Created basic __init__.py with imports, home route, and simple decorators
   * Create app folder to hold project
+
+endritI -- 2025-01-08 22:27
+  * added new version of design document
   
 benR -- 2025-01-09 22:34
 * Created requirements.txt
