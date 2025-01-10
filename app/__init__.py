@@ -48,3 +48,5 @@ def login_required(f):
 def home():
     return "JBEE is the best"
 
+if __name__ == "__main__":
+    app.run(debug=True)

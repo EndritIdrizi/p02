@@ -11,3 +11,6 @@ benR -- 2025-01-08 18:20
   * Created basic __init__.py with imports, home route, and simple decorators
   * Create app folder to hold project
   
+benR -- 2025-01-09 22:34
+* Created requirements.txt
+* Adding if name = main portion in __init__
