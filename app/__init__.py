@@ -44,9 +44,74 @@ def login_required(f):
     return decorated_function
 
 # Home route
-@app.route('/')
+@app.route('/') # home page route
 def home():
-    return "JBEE is the best"
+    user = None
+    if 'user_id' in session:
+        user = User.get_by_id(session['user_id'])
+    
+    # keys will go here
+
+    return render_template(
+        'wordle.html'
+    )
+
+# login route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.get_by_username(username)
+        if user and user.verify_password(user.password_hash, password):
+            session['user_id'] = user.id
+            flash("Login successful!", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("Invalid username or password.", "danger")
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        # password validation (server-side)
+        errors = []
+        if password != confirm_password:
+            errors.append("Passwords do not match.")
+        if len(password) < 12:
+            errors.append("Password must be at least 12 characters long.")
+        if not any(c.islower() for c in password):
+            errors.append("Password must contain at least one lowercase letter.")
+        if not any(c.isupper() for c in password):
+            errors.append("Password must contain at least one uppercase letter.")
+        if not any(c.isdigit() for c in password):
+            errors.append("Password must contain at least one number.")
+        if not any(c.isalpha() for c in password):
+            errors.append("Password must contain at least one letter.")
+
+        if errors:
+            for error in errors:
+                flash(error, 'danger')
+            return redirect(url_for('register'))
+
+        if User.get_by_username(username):
+            flash("Username already exists.", 'danger')
+            return redirect(url_for('register'))
+
+        User.create(username, password)
+        flash("Account created! Log in now.", 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash("You have been logged out.", 'info')
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(debug=True)
