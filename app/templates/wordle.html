@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle</title>
+  <style>
+    #results {
+      margin-top: 20px;
+    }
+    #results div {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wordle</h1>
+  <input type="text" id="wordInput" maxlength="5" placeholder="Enter a 5-letter word" />
+  <button id="checkButton">Check</button>
+  <div id="error-message"></div>
+  <div id="results"></div>
+
+  <script src="wordle.js"></script>
+</body>
+</html>
