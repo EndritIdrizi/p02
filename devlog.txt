@@ -21,5 +21,10 @@ benR -- 2025-01-09 22:34
 * Created requirements.txt
 * Adding if name = main portion in __init__
 
-endritI -- 2025-01-13-2025 10:36
+endritI -- 2025-01-13 10:36
   * added readme for keys
+
+endritI -- 2025-01-13 11:21
+  * added wordle functionality
+  * wordle.html
+  * worlde.js
