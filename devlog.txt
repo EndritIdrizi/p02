@@ -20,3 +20,6 @@ endritI -- 2025-01-08 22:27
 benR -- 2025-01-09 22:34
 * Created requirements.txt
 * Adding if name = main portion in __init__
+
+endritI -- 2025-01-13-2025 10:36
+  * added readme for keys
