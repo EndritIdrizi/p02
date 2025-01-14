@@ -8,9 +8,13 @@ Time Spent: 0.5
 
 import os, sys
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-import config
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 from functools import wraps
+from werkzeug.utils import secure_filename
+import requests
+import time
+from models import User, Game, UserGame, Statistic, Database
+import config
 
 # adding config.py to search path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -18,20 +22,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Flask app initialization
 app = Flask(__name__)
 app.config.from_object(config.Config)
-
-# Database configuration
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'site.db')
-
-# Database connection function
-def get_db_connection():
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        return conn
-    except sqlite3.Error as e:
-        print(f"Database connection error: {e}")
-        return None
 
 # Login required decorator
 def login_required(f):
