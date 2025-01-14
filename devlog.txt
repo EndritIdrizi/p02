@@ -36,3 +36,6 @@ benR -- 2025-01-13 11:28
 benR -- 2025-01-13-19:33
   * Added more imports (all of them hopefully) to top of app 
   * added basic models file to import to app
+  
+benR -- 2025-01-14 11:43
+    * Added more routes to init py including play game, get all games, etc

@@ -35,6 +35,7 @@ def login_required(f):
 
 # Home route
 @app.route('/') # home page route
+@login_required
 def home():
     user = None
     if 'user_id' in session:
@@ -102,6 +103,75 @@ def logout():
     session.pop('user_id', None)
     flash("You have been logged out.", 'info')
     return redirect(url_for('home'))
+
+@app.route('/create_game', methods=['GET', 'POST']
+@login_required
+def create_game():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        pairs = request.form.get('pairs')
+        difficulty = request.form.get('difficulty')
+        type = request.form.get('type')
+
+        # incorrect pairs
+        if not pairs or ';' not in pairs:
+            flash("Invalid pairs format. Format it like group1;group2;group3;group4", "Danger")
+            return redirect(url_for('create_game'))
+            # more val here if needed
+    
+        Game.create(title, pairs, session['user_id'], difficulty, game_type)
+        flash("Game created successfully!", "Success")
+        return redirect(url_for('home'))
+    return render_template('create_game.html')
+
+# view your created games
+@app.route('/my_games', methods=['GET', 'POST'])
+@login_required
+def my_games():
+    games = Game.get_all()
+    user_games = [game for game in if game['author_id'] == session['user_id']]
+    return render_template('my_games.html', games=user_games)
+
+# play game
+@app.route('/play/<int:game_id>', methods=['GET', 'POST'])
+@login_required
+def play_game(game_id):
+    game = Game.get_by_id(game_id)
+    if not game:
+        flash("Game not found", "Danger")
+        return redirect(url_for('home'))
+    
+    if game_type.lower() == 'wordle':
+        return redirect(url_for('play_wordle', game_id=game_id))
+    elif game_type.lower() == 'connections':
+        return redirect(url_for('play_connections', game_id=game_id))
+    else:
+        flash("Incorrect game type!", "Danger")
+        return redirect(url_for('home'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+')
 
 if __name__ == "__main__":
     app.run(debug=True)
