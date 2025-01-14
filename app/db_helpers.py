@@ -12,7 +12,9 @@ def userTable():
     cursor.execute("CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT NOT NULL, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
     db.commit()
 
-
+def wordleTable():
+    cursor.execute("CREATE TABLE wordle(id INTEGER PRIMARY KEY, word TEXT NOT NULL, author TEXT NOT NULL, title TEXT NOT NULL)")
+    db.commit()
 
 # User Helpers
 
@@ -50,6 +52,15 @@ def validatePassword(hash, password):
 
 # End of User Helpers
 
+# Wordle Helpers
+
+def addWordle(word, author, title):
+    cursor.execute("INSERT INTO wordle(word, author, title) VALUES (?, ?, ?)", (word, author, title))
+    db.commit()
+
+# End of Wordle Helpers
+
 #userTable()
 #lessonTable()
 #testTable()
+#wordleTable()

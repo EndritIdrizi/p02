@@ -35,7 +35,7 @@ class User:
         conn.close()
         return user
 
-    # get user by username 
+    # get user by username
     @staticmethod
     def get_by_username(username):
         conn = Database.get_db_connection()
@@ -84,15 +84,15 @@ class Game:
     @staticmethod
     def get_by_id(game_id):
         conn = Database.get_db_connection()
-        game = conn.execute('SELECT * FROM games WHERE id = ?', (game_id,)).fetchone()
+        game = conn.execute('SELECT * FROM games WHERE id = ?', (game_id,)).fetchone()[0]
         conn.close()
         return game
 
 # games that the user makes themselves, still not finished
 class UserGame:
-    # create a game. 
+    # create a game.
     @staticmethod
-    def create(user_id, game_id, status, attempts, time_spent):
+    def create(user_id, game_id, type, status, attempts, time_spent):
         conn = Database.get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
