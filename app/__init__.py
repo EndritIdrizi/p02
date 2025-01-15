@@ -224,8 +224,9 @@ def play_wordle(game_id):
     return render_template('play_wordle.html', game=game, wordle_game=wordle_game)
 
 def extract_saved_word(pairs):
-    
+    pass
 def get_congrats_music():
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)
