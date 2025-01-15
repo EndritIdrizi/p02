@@ -104,7 +104,7 @@ def logout():
     flash("You have been logged out.", 'info')
     return redirect(url_for('home'))
 
-@app.route('/create_game', methods=['GET', 'POST']
+@app.route('/create_game', methods=['GET', 'POST'])
 @login_required
 def create_game():
     if request.method == 'POST':
@@ -129,7 +129,7 @@ def create_game():
 @login_required
 def my_games():
     games = Game.get_all()
-    user_games = [game for game in if game['author_id'] == session['user_id']]
+    user_games = [game for game in games if game['author_id'] == session['user_id']]
     return render_template('my_games.html', games=user_games)
 
 # play game
@@ -148,30 +148,84 @@ def play_game(game_id):
     else:
         flash("Incorrect game type!", "Danger")
         return redirect(url_for('home'))
+    
+# Play Wordle
+@app.route('/play_wordle/<int:game_id>', methods=['GET', 'POST'])
+@login_required
+def play_wordle(game_id):
+    game = Game.get_by_id(game_id)
+    if not game:
+        flash("Game not found.", "danger")
+        return redirect(url_for('home'))
 
+    # init game state in session if not present
+    if 'wordle_game' not in session or session['wordle_game']['game_id'] != game_id:
+        session['wordle_game'] = {
+            'game_id': game_id,
+            'attempts': 0,
+            'max_attempts': 6,
+            'saved_word': extract_saved_word(game['pairs']),  # function based on pairs
+            'guesses': []
+        }
 
+    if request.method == 'POST':
+        user_guess = request.form.get('word').lower()
 
+        # input validation
+        if len(user_guess) != 5 or not user_guess.isalpha():
+            flash("Please enter a valid 5-letter word (only letters allowed).", "danger")
+            return redirect(url_for('play_wordle', game_id=game_id))
 
+        # we need miriam web api
+        api_key = app.config['MW_API_KEY']
+        if not api_key:
+            flash("Dictionary API key not configured.", "danger")
+            return redirect(url_for('play_wordle', game_id=game_id))
+        response = requests.get(
+            f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{user_guess}",
+            params={'key': api_key}
+        )
+        data = response.json()
+        if not data or not isinstance(data, list) or not isinstance(data[0], dict):
+            flash("Invalid word.", "danger")
+            return redirect(url_for('play_wordle', game_id=game_id))
 
+        # game logic
+        saved_word = session['wordle_game']['saved_word']
+        session['wordle_game']['attempts'] += 1
 
+        # check if the guess is correct
+        if user_guess == saved_word:
+            flash("Congratulations! You guessed the word!", "success")
+            # update user games and statistics
+            UserGame.create(session['user_id'], game_id, 'won', session['wordle_game']['attempts'], time.time())
+            Statistic.create_if_not_exists(session['user_id'], 'Wordle')
+            Statistic.update(session['user_id'], 'Wordle', won_on_first_attempt=(session['wordle_game']['attempts'] == 1))
+            # play congratulatory music
+            music_files = get_congrats_music()
+            return render_template('congrats.html', music_files=music_files)
 
+        # add guess to guesses
+        session['wordle_game']['guesses'].append(user_guess)
 
+        if session['wordle_game']['attempts'] >= session['wordle_game']['max_attempts']:
+            flash(f"Game Over! The correct word was '{saved_word}'.", "danger")
+            # update user games and statistics
+            UserGame.create(session['user_id'], game_id, 'lost', session['wordle_game']['attempts'], time.time())
+            Statistic.create_if_not_exists(session['user_id'], 'Wordle')
+            Statistic.update(session['user_id'], 'Wordle', won_on_first_attempt=False)
+            return redirect(url_for('home'))
 
+        flash("Keep trying!", "info")
+        return redirect(url_for('play_wordle', game_id=game_id))
 
+    # retrieve game state
+    wordle_game = session.get('wordle_game', {})
+    return render_template('play_wordle.html', game=game, wordle_game=wordle_game)
 
-
-
-
-
-
-
-
-
-
-
-
-
-')
+def extract_saved_word(pairs):
+    
+def get_congrats_music():
 
 if __name__ == "__main__":
     app.run(debug=True)

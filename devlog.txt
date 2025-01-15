@@ -1,9 +1,45 @@
-vedantK -- 2025-01-07 11:25
-  * Wrote project description and worked on formatting design document
-  * Updated README with new description and roles
 benR -- 2025-01-07 18:31
   * Created devlog.txt
   * Fixed readme
-vedantK -- 2025-01-07 8:14
-  * Wrote templates for all files
-  * Made minimal progress on navbar for website
+
+vedantK -- 2025-01-07 11:25
+  * Wrote project description and worked on formatting design document
+  * Updated README with new description and roles
+
+endritI -- 2025-01-08 6:57
+  * Uploaded design document pdf
+
+benR -- 2025-01-08 18:20
+  * Created config.py with beginning db setup and secret key activations
+  * Created basic __init__.py with imports, home route, and simple decorators
+  * Create app folder to hold project
+
+endritI -- 2025-01-08 22:27
+  * added new version of design document
+  
+benR -- 2025-01-09 22:34
+* Created requirements.txt
+* Adding if name = main portion in __init__
+
+endritI -- 2025-01-13 10:36
+  * added readme for keys
+
+endritI -- 2025-01-13 11:21
+  * added wordle functionality
+  * wordle.html
+  * worlde.js
+
+benR -- 2025-01-13 11:28
+  * Added login/register/etc routes
+  * Fixed errors of where the script was coming formatting
+
+benR -- 2025-01-13-19:33
+  * Added more imports (all of them hopefully) to top of app 
+  * added basic models file to import to app
+  
+benR -- 2025-01-14 11:43
+    * Added more routes to init py including play game, get all games, etc
+
+benR -- 2025-01-14 22:01
+  * Added play world functionality
+  * Fixed devlog
