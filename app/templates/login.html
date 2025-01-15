@@ -3,9 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
   <title>Login</title>
+  <style>
+  .subnav-hero-section {
+text-align: center;
+background: #1779ba;
+background-size: cover;
+position: relative;
+overflow: visible;
+display: -webkit-flex;
+display: -ms-flexbox;
+display: flex;
+-webkit-align-items: center;
+  -ms-flex-align: center;
+      align-items: center;
+-webkit-justify-content: center;
+  -ms-flex-pack: center;
+      justify-content: center;
+height: 300px;
+}
+
+.subnav-hero-section .subnav-hero-headline {
+color: #fefefe;
+}
+
+.subnav-hero-subnav {
+float: none;
+position: absolute;
+text-align: center;
+margin: 0 auto;
+bottom: 0;
+width: 100%;
+}
+
+.subnav-hero-subnav li {
+float: none;
+display: inline-block;
+}
+
+.subnav-hero-subnav li a {
+padding: 0.9rem 1rem;
+font-size: 0.75rem;
+color: #fefefe;
+text-transform: uppercase;
+display: block;
+font-weight: bold;
+letter-spacing: 1px;
+transition: all 0.35s ease-in-out;
+}
+
+.subnav-hero-subnav li a.is-active {
+background: rgba(254, 254, 254, 0.15);
+}
+
+.subnav-hero-subnav li a:hover {
+background: rgba(254, 254, 254, 0.15);
+}
+  </style>
 </head>
 <body>
     <h1>Login</h1>
+    <nav class="scrollhide-nav">
+        <div class="top-bar">
+        <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+            <li class="menu-text">JBEETimes</li>
+            <li>
+                <ul class="menu horizontal">
+                <li><a href="./create_connections.html">Create Connections</a></li>
+                <li><a href="./create_wordle.html">Create Wordle</a></li>
+                <li><a href="./play_connections.html">Play Connections</a></li>
+                <li><a href="./play_wordle.html">Play Wordle</a></li>
+                </ul>
+            </li>
+            </ul>
+        </div>
+        </div>
+    </nav>
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
   <title>Wordle</title>
   <style>
     #results {
@@ -15,11 +16,29 @@
 </head>
 <body>
   <h1>Wordle</h1>
+  <nav class="scrollhide-nav">
+      <div class="top-bar">
+      <div class="top-bar-left">
+          <ul class="dropdown menu" data-dropdown-menu>
+          <li class="menu-text">JBEETimes</li>
+          <li>
+              <ul class="menu horizontal">
+              <li><a href="./create_connections.html">Create Connections</a></li>
+              <li><a href="./create_wordle.html">Create Wordle</a></li>
+              <li><a href="./play_connections.html">Play Connections</a></li>
+              <li><a href="./play_wordle.html">Play Wordle</a></li>
+              </ul>
+          </li>
+          </ul>
+      </div>
+      </div>
+  </nav>
   <input type="text" id="wordInput" maxlength="5" placeholder="Enter a 5-letter word" />
   <button id="checkButton">Check</button>
   <div id="error-message"></div>
   <div id="results"></div>
 
   <script src="static/js/wordle.js"></script>
+
 </body>
 </html>
