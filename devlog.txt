@@ -43,3 +43,7 @@ benR -- 2025-01-14 11:43
 benR -- 2025-01-14 22:01
   * Added play world functionality
   * Fixed devlog
+
+vedantK -- 2025-1-15 11:45
+  * Finished most CSS and all HTML templates
+  * Made fully functioning, accessible navbar
