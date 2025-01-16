@@ -3,7 +3,7 @@ Team JBEE: Ben Rudinski, Vedant Kothari, Endrit Idrizi, Ziyad Hamed
 SoftDev
 P02
 2025-01-08
-Time Spent: 0.5
+Time Spent: 3
 '''
 
 import os, sys
@@ -13,7 +13,7 @@ from functools import wraps
 from werkzeug.utils import secure_filename
 import requests
 import time
-from models import User, Game, UserGame, Statistic, Database
+from models import User, Game, UserGame, Statistic, Database, CompletedGroup
 import config
 
 # adding config.py to search path
@@ -22,6 +22,10 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Flask app initialization
 app = Flask(__name__)
 app.config.from_object(config.Config)
+
+# make sure the database tables are set up
+from db_setup import setup_database
+setup_database(app.config['DATABASE'])
 
 # Login required decorator
 def login_required(f):
@@ -40,8 +44,6 @@ def home():
     user = None
     if 'user_id' in session:
         user = User.get_by_id(session['user_id'])
-    
-    # keys will go here
 
     return render_template(
         'wordle.html'
@@ -111,13 +113,21 @@ def create_game():
         title = request.form.get('title')
         pairs = request.form.get('pairs')
         difficulty = request.form.get('difficulty')
-        type = request.form.get('type')
+        game_type = request.form.get('type')
 
-        # incorrect pairs
-        if not pairs or ';' not in pairs:
-            flash("Invalid pairs format. Format it like group1;group2;group3;group4", "Danger")
+        # val
+        if not title:
+            flash("No Title!", "danger")
             return redirect(url_for('create_game'))
-            # more val here if needed
+        if not pairs or ';' not in pairs:
+            flash("Invalid pairs format. Format it like group1;group2;group3;group4", "danger")
+            return redirect(url_for('create_game'))
+        if not difficulty:
+            flash("Difficulty level is required.", "danger")
+            return redirect(url_for('create_game'))
+        if not game_type:
+            flash("Game type is required.", "danger")
+            return redirect(url_for('create_game'))
     
         Game.create(title, pairs, session['user_id'], difficulty, game_type)
         flash("Game created successfully!", "Success")
@@ -140,6 +150,8 @@ def play_game(game_id):
     if not game:
         flash("Game not found", "Danger")
         return redirect(url_for('home'))
+    
+    game_type = game['type'] 
     
     if game_type.lower() == 'wordle':
         return redirect(url_for('play_wordle', game_id=game_id))
@@ -164,8 +176,9 @@ def play_wordle(game_id):
             'game_id': game_id,
             'attempts': 0,
             'max_attempts': 6,
-            'saved_word': extract_saved_word(game['pairs']),  # function based on pairs
-            'guesses': []
+            'saved_word': extract_saved_word(game['pairs']), 
+            'guesses': [],
+            'start_time': time.time()
         }
 
     if request.method == 'POST':
@@ -211,7 +224,9 @@ def play_wordle(game_id):
         if session['wordle_game']['attempts'] >= session['wordle_game']['max_attempts']:
             flash(f"Game Over! The correct word was '{saved_word}'.", "danger")
             # update user games and statistics
-            UserGame.create(session['user_id'], game_id, 'lost', session['wordle_game']['attempts'], time.time())
+            time_spent = time.time() - session['wordle_game']['start_time']
+            
+            UserGame.create(session['user_id'], game_id, 'lost', session['wordle_game']['attempts'], time_spent)
             Statistic.create_if_not_exists(session['user_id'], 'Wordle')
             Statistic.update(session['user_id'], 'Wordle', won_on_first_attempt=False)
             return redirect(url_for('home'))
@@ -227,7 +242,7 @@ def extract_saved_word(pairs):
     return pairs.split(';')[0].strip().lower() 
 
 def get_congrats_music():
-    music_files [
+    music_files = [
         'evicted.mp3',
         'protagonist.mp3',
         '4am.mp3',
@@ -266,13 +281,13 @@ def validate_word():
     is_valid = bool(data and isinstance(data, list) and isinstance(data[0], dict))
     return jsonify({'valid': is_valid})
 
-@app.route('completed_games')
+@app.route('/completed_games')
 @login_required
 def completed_games():
     user_games = UserGame.get_by_user(session['user_id'])
     return render_template('completed_games.html', user_games=user_games)
 
-@app.route('profile')
+@app.route('/profile')
 @login_required
 def profile():
     user = User.get_by_id(session['user_id'])
@@ -280,9 +295,10 @@ def profile():
     return render_template('profile', user=user, user_games=user_games)
 
 # u can earn credits by winning games
-@app.route('credits')
+@app.route('/credits')
 @login_required
 def credits():
+    user_id = session['user_id']
     conn = Database.get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
@@ -291,10 +307,12 @@ def credits():
         WHERE user_id = ? AND game_type = 'Wordle'
     ''', (user_id,))
     stats = cursor.fetchone()
-
     conn.close()
     
-    credits = stats['games_played'] * 10 + stats['won_first_attempt'] * 50
+    if stats:
+        credits = stats['games_played'] * 10 + stats['won_first_attempt'] * 50
+    else:
+        credits = 0
 
     return render_template('credits', credits=credits)
 
@@ -307,11 +325,57 @@ def play_connections(game_id):
         flash("Game not found!", "danger")
         return redirect(url_for('home'))
     
+    user_id = session['user_id']
+
+    # Initialize game state in session if not present
+    if 'connections_game' not in session or session['connections_game']['game_id'] != game_id:
+        session['connections_game'] = {
+            'game_id': game_id,
+            'completed_groups': CompletedGroup.get_completed_groups(user_id, game_id),
+            'start_time': time.time()
+        }
+
     if request.method == 'POST':
-        # user input here, will add tn
-        pass
-    
-    return render_template('play_connections.html', game=game)
+        data = request.get_json()
+        selected_words = data.get('selected_words', [])
+
+        if len(selected_words) != 4:
+            return jsonify({'status': 'error', 'message': 'You must select exactly four words.'}), 400
+
+        # Parse the groups from the game
+        groups = game['pairs'].split(';')  # Assuming each group is separated by ';'
+        parsed_groups = []
+        for group in groups:
+            parts = group.split(',')
+            group_name = parts[0].strip()
+            group_words = [word.strip().lower() for word in parts[1:]]
+            parsed_groups.append({'name': group_name, 'words': group_words})
+
+        # Check if the selected words match any group
+        matched_group = None
+        for grp in parsed_groups:
+            if set(selected_words) == set(grp['words']) and grp['name'] not in session['connections_game']['completed_groups']:
+                matched_group = grp
+                break
+
+        if matched_group:
+            # Mark group as completed
+            CompletedGroup.create(user_id, game_id, matched_group['name'])
+            session['connections_game']['completed_groups'].append(matched_group['name'])
+
+            # Update user statistics (e.g., credits)
+            # For example, award 100 credits per completed group
+            if 'credits' not in session:
+                session['credits'] = 0
+            session['credits'] += 100  # Adjust as needed
+
+            return jsonify({'status': 'success', 'message': f"Found group: {matched_group['name']}"})
+        else:
+            return jsonify({'status': 'fail', 'message': "Incorrect selection. Try again."}), 400
+
+    # On GET, render the play_connections.html template
+    completed_groups = session['connections_game']['completed_groups']
+    return render_template('play_connections.html', game=game, completed_groups=completed_groups)
 
 # error handlers
 @app.errorhandler(404)

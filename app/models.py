@@ -141,3 +141,26 @@ class Statistic:
             ''', (user_id, game_type))
         conn.commit()
         conn.close()
+    
+# for connctions words    
+class CompletedGroup:
+    @staticmethod
+    def create(user_id, game_id, group_name):
+        conn = Database.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO completed_groups (user_id, game_id, group_name)
+            VALUES (?, ?, ?)
+        ''', (user_id, game_id, group_name))
+        conn.commit()
+        conn.close()
+
+    @staticmethod
+    def get_completed_groups(user_id, game_id):
+        conn = Database.get_db_connection()
+        groups = conn.execute('''
+            SELECT group_name FROM completed_groups
+            WHERE user_id = ? AND game_id = ?
+        ''', (user_id, game_id)).fetchall()
+        conn.close()
+        return [group['group_name'] for group in groups]
