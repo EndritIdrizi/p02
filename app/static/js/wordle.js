@@ -1,5 +1,5 @@
 // Predefined word to check against - To be replaced with word from database
-const savedWord = "apple";
+const savedWord = document.getElementById("word").getAttributeContent("content");
 
 function checkWord() {
   const userInput = document.getElementById("wordInput").value.toLowerCase();
