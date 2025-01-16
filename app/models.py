@@ -3,7 +3,7 @@ Team JBEE: Ben Rudinski, Vedant Kothari, Endrit Idrizi, Ziyad Hamed
 SoftDev
 P02
 2025-01-08
-Time Spent: 1
+Time Spent: 2
 '''
 
 # models.py
@@ -12,10 +12,6 @@ import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app
-
-# load the db
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'site.db')
 
 # class for db with basic methods
 class Database:
@@ -113,9 +109,19 @@ class UserGame:
         conn.close()
         return user_games
 
-
 # statistics potentially for more features, insteado f user settings
 class Statistic:
+    @staticmethod
+    def create_if_not_exists(user_id, game_type):
+        conn = Database.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT OR IGNORE INTO statistics (user_id, game_type)
+            VALUES (?, ?)
+        ''', (user_id, game_type))
+        conn.commit()
+        conn.close()
+        
     @staticmethod
     def update(user_id, game_type, won_on_first_attempt=False):
         conn = Database.get_db_connection()
@@ -123,7 +129,8 @@ class Statistic:
         if won_on_first_attempt:
             cursor.execute('''
                 UPDATE statistics
-                SET won_first_attempt = won_first_attempt + 1
+                SET games_played = games_played + 1,
+                    won_first_attempt = won_first_attempt + 1
                 WHERE user_id = ? AND game_type = ?
             ''', (user_id, game_type))
         else:

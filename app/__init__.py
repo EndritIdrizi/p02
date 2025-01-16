@@ -231,15 +231,13 @@ def get_congrats_music():
         'evicted.mp3',
         'protagonist.mp3',
         '4am.mp3',
-        'scar.mp3',
-        'talking_stage.mp3',
-        'just_4_me.mp3',
-        'changed.mp3',
-        'next_up_pt2.mp3',
-        'heart_on_ice.mp3',
-        'with_me_or_not.mp3',
         'princeton.mp3',
-        'harvard.mp3'
+        'wave.mp3',
+        'propeller.mp3',
+        'eurostar.mp3',
+        'coming.mp3',
+        'letgo.mp3',
+        'higher.mp3'
     ]
     return music_files
 
