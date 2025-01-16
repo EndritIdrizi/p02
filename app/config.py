@@ -3,7 +3,7 @@ Team JBEE: Ben Rudinski, Vedant Kothari, Endrit Idrizi, Ziyad Hamed
 SoftDev
 P02
 2025-01-08
-Time Spent: 0.5
+Time Spent: 1
 '''
 
 import os
@@ -26,6 +26,7 @@ class Config:
     KEYS_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'keys')
 
     # API keys (to add in future)
+    MW_API_KEY = read_key(KEYS_DIR, 'mw_api_key.txt')
 
     # db configuration
     DATABASE = DB_FILE
