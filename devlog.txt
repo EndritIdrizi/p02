@@ -47,3 +47,8 @@ benR -- 2025-01-14 22:01
 vedantK -- 2025-1-15 11:45
   * Finished most CSS and all HTML templates
   * Made fully functioning, accessible navbar
+  
+benR -- 2025-1-16 11:36
+    * Completed flask
+    * added user_game back to models
+    * nemmzz is quite good i can't lie. He is prob better than JBEE, considering changing the name. 

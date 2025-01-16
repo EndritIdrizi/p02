@@ -88,6 +88,32 @@ class Game:
         conn.close()
         return game
 
+class UserGame:
+    # create a game.
+    @staticmethod
+    def create(user_id, game_id, type, status, attempts, time_spent):
+        conn = Database.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO user_games (user_id, game_id, status, attempts, time_spent)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (user_id, game_id, status, attempts, time_spent))
+        conn.commit()
+        conn.close()
+    # find which user made the game
+    @staticmethod
+    def get_by_user(user_id):
+        conn = Database.get_db_connection()
+        user_games = conn.execute('''
+            SELECT ug.*, g.title, g.type
+            FROM user_games ug
+            JOIN games g ON ug.game_id = g.id
+            WHERE ug.user_id = ?
+        ''', (user_id,)).fetchall()
+        conn.close()
+        return user_games
+
+
 # statistics potentially for more features, insteado f user settings
 class Statistic:
     @staticmethod

@@ -224,9 +224,105 @@ def play_wordle(game_id):
     return render_template('play_wordle.html', game=game, wordle_game=wordle_game)
 
 def extract_saved_word(pairs):
-    pass
+    return pairs.split(';')[0].strip().lower() 
+
 def get_congrats_music():
-    pass
+    music_files [
+        'evicted.mp3',
+        'protagonist.mp3',
+        '4am.mp3',
+        'scar.mp3',
+        'talking_stage.mp3',
+        'just_4_me.mp3',
+        'changed.mp3',
+        'next_up_pt2.mp3',
+        'heart_on_ice.mp3',
+        'with_me_or_not.mp3',
+        'princeton.mp3',
+        'harvard.mp3'
+    ]
+    return music_files
+
+# serve music
+@app.route('/music/<filename>')
+def serve_music(filename):
+    return send_from_directory(os.path.join(app.root_path, 'static', 'music'), filename)
+
+# validate word
+@app.route('/api/validate_word', methods=['GET', 'POST'])
+def validate_word():
+    data = request.get_json()
+    word = data.get('word', "").lower()
+    if not word:
+        return jsonify({'valid': False, 'message': 'No word was found.'}), 400
+
+    api_key = app.config['MW_API_KEY'] 
+    if not api_key:
+        return jsonify({'valid': False, 'message': 'No API key.'}), 500
+
+    response = requests.get(
+        f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}",
+        params={'key': api_key}
+    )
+    data = response.json()
+    is_valid = bool(data and isinstance(data, list) and isinstance(data[0], dict))
+    return jsonify({'valid': is_valid})
+
+@app.route('completed_games')
+@login_required
+def completed_games():
+    user_games = UserGame.get_by_user(session['user_id'])
+    return render_template('completed_games.html', user_games=user_games)
+
+@app.route('profile')
+@login_required
+def profile():
+    user = User.get_by_id(session['user_id'])
+    user_games = UserGame.get_by_user(session['user_id'])
+    return render_template('profile', user=user, user_games=user_games)
+
+# u can earn credits by winning games
+@app.route('credits')
+@login_required
+def credits():
+    conn = Database.get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT games_played, won_first_attempt
+        FROM statistics
+        WHERE user_id = ? AND game_type = 'Wordle'
+    ''', (user_id,))
+    stats = cursor.fetchone()
+
+    conn.close()
+    
+    credits = stats['games_played'] * 10 + stats['won_first_attempt'] * 50
+
+    return render_template('credits', credits=credits)
+
+# play connections
+@app.route('/play_connections/<int:game_id>', methods=['GET', 'POST'])
+@login_required
+def play_connections(game_id):
+    game = Game.get_by_id(game_id)
+    if not game:
+        flash("Game not found!", "danger")
+        return redirect(url_for('home'))
+    
+    if request.method == 'POST':
+        # user input here, will add tn
+        pass
+    
+    return render_template('play_connections.html', game=game)
+
+# error handlers
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    return render_template('500.html'), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
