@@ -81,6 +81,24 @@ class Game:
         games = conn.execute('SELECT * FROM games').fetchall()
         conn.close()
         return games
+    
+    @staticmethod
+    def get_all_wordles_by_user(user_id):
+        conn = Database.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM games WHERE user_id = ? AND type = "wordle"', (user_id,))
+        wordles = cursor.fetchall()
+        conn.close()
+        return wordles
+
+    @staticmethod
+    def get_all_connections_by_user(user_id):
+        conn = Database.get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM games WHERE user_id = ? AND type = "connections"', (user_id,))
+        connections = cursor.fetchall()
+        conn.close()
+        return connections
 
     # fetch a certain gae by id
     @staticmethod

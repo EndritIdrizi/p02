@@ -164,36 +164,51 @@ def create_game():
         return redirect(url_for('home'))
     return render_template('create.html')
 
+@app.route('/play')
+@login_required
+def play():
+    return render_template('play.html')
+
 # create connections route
 @app.route('/create/connections', methods=['GET', 'POST'])
 @login_required
 def create_connections():
     if request.method == 'POST':
-        # retrieve form data for creating connections
-        print(request.form)
+        # Retrieve form data for creating connections
         connection_name = request.form.get('connection_name').strip()
         connection_description = request.form.get('connection_description').strip()
-        connectionString = request.form.get("connection_value")
+        connection_value = request.form.get("connection_value").strip()
 
-        # server-side validation
-        if not connection_name or not connection_description:
-            flash("all fields are required to create a connection.", "danger")
+        # Server-side validation
+        if not connection_name or not connection_description or not connection_value:
+            flash("All fields are required to create a connection.", "danger")
             return redirect(url_for('create_connections'))
 
-        # insert the new connection into the database
+        # Define default difficulty for Connections games
+        default_difficulty = "N/A"
+
+        # Insert the new connection into the 'games' table with type 'connections'
         try:
             conn = Database.get_db_connection()
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO connections (user_id, name, description, connectionString) VALUES (?, ?, ?, ?)',
-                (session['user_id'], connection_name, connection_description, connectionString)
+                '''
+                INSERT INTO games (title, pairs, user_id, difficulty, type) 
+                VALUES (?, ?, ?, ?, ?)
+                ''',
+                (connection_name, connection_value, session['user_id'], default_difficulty, "connections")
             )
             conn.commit()
             conn.close()
-            flash("connection created successfully!", "success")
-            return redirect(url_for('home'))
-        except sqlite3.IntegrityError:
-            flash("an error occurred while creating the connection. please try again.", "danger")
+            flash("Connection created successfully!", "success")
+            return redirect(url_for('connections'))
+        except sqlite3.IntegrityError as e:
+            app.logger.error(f"IntegrityError while creating connection: {e}")
+            flash("An error occurred while creating the connection. Please try again.", "danger")
+            return redirect(url_for('create_connections'))
+        except Exception as e:
+            app.logger.error(f"Unexpected error while creating connection: {e}")
+            flash("An unexpected error occurred. Please try again.", "danger")
             return redirect(url_for('create_connections'))
 
     return render_template('create_connections.html')
@@ -206,7 +221,7 @@ def create_wordle():
         # retrieve form data for creating wordle
         wordle_name = request.form.get('wordle_name').strip()
         wordle_description = request.form.get('wordle_description').strip()
-        wordle_word = request.form.get('wordle_word').strip()
+        wordle_word = request.form.get('wordle_value').strip()
 
         # server-side validation
         if not wordle_name or not wordle_description or not wordle_word:
@@ -479,13 +494,13 @@ def play_connections(game_id):
 
 @app.route('/wordle', methods=['GET'])
 @login_required
-def list_wordle():
+def wordle():
     wordles = Game.get_all_wordles_by_user(session['user_id'])
     return render_template('wordle.html', wordles=wordles)
 
 @app.route('/connections', methods=['GET'])
 @login_required
-def list_connections():
+def connections():
     connections = Game.get_all_connections_by_user(session['user_id'])
     return render_template('connections.html', connections=connections)
 
