@@ -1,85 +1,215 @@
+<!-- templates/create.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create - JBEETimes</title>
+    <!-- foundation css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
-  <title>Create</title>
-  <style>
-  .subnav-hero-section {
-text-align: center;
-background: #1779ba;
-background-size: cover;
-position: relative;
-overflow: visible;
-display: -webkit-flex;
-display: -ms-flexbox;
-display: flex;
--webkit-align-items: center;
-  -ms-flex-align: center;
-      align-items: center;
--webkit-justify-content: center;
-  -ms-flex-pack: center;
-      justify-content: center;
-height: 300px;
-}
+    <style>
+        /* custom styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
 
-.subnav-hero-section .subnav-hero-headline {
-color: #fefefe;
-}
+        .subnav-hero-section {
+            text-align: center;
+            background: #1779ba;
+            background-size: cover;
+            position: relative;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: #fff;
+        }
 
-.subnav-hero-subnav {
-float: none;
-position: absolute;
-text-align: center;
-margin: 0 auto;
-bottom: 0;
-width: 100%;
-}
+        .subnav-hero-section .subnav-hero-headline {
+            font-size: 2rem;
+        }
 
-.subnav-hero-subnav li {
-float: none;
-display: inline-block;
-}
+        .subnav-hero-subnav {
+            float: none;
+            position: absolute;
+            text-align: center;
+            margin: 0 auto;
+            bottom: 0;
+            width: 100%;
+        }
 
-.subnav-hero-subnav li a {
-padding: 0.9rem 1rem;
-font-size: 0.75rem;
-color: #fefefe;
-text-transform: uppercase;
-display: block;
-font-weight: bold;
-letter-spacing: 1px;
-transition: all 0.35s ease-in-out;
-}
+        .subnav-hero-subnav li {
+            float: none;
+            display: inline-block;
+        }
 
-.subnav-hero-subnav li a.is-active {
-background: rgba(254, 254, 254, 0.15);
-}
+        .subnav-hero-subnav li a {
+            padding: 0.9rem 1rem;
+            font-size: 0.75rem;
+            color: #fefefe;
+            text-transform: uppercase;
+            display: block;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.35s ease-in-out;
+            text-decoration: none;
+        }
 
-.subnav-hero-subnav li a:hover {
-background: rgba(254, 254, 254, 0.15);
-}
-  </style>
+        .subnav-hero-subnav li a.is-active,
+        .subnav-hero-subnav li a:hover {
+            background: rgba(254, 254, 254, 0.15);
+        }
+
+        .create-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .create-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .create-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .create-option {
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            width: 45%;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .create-option:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-5px);
+        }
+
+        .create-option a {
+            display: block;
+            text-decoration: none;
+            color: #1779ba;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .create-option a:hover {
+            color: #0d5c9c;
+        }
+
+        /* flash messages styling */
+        .flash-messages {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Create</h1>
-    <nav class="scrollhide-nav">
-        <div class="top-bar">
+    <!-- header section -->
+    <div class="subnav-hero-section">
+        <h2 class="subnav-hero-headline">Create Your Games</h2>
+    </div>
+
+    <!-- navigation bar -->
+    <nav class="top-bar" data-topbar role="navigation">
         <div class="top-bar-left">
             <ul class="dropdown menu" data-dropdown-menu>
-            <li class="menu-text">JBEETimes</li>
-            <li>
-                <ul class="menu horizontal">
-                <li><a href="./create_connections.html">Create Connections</a></li>
-                <li><a href="./create_wordle.html">Create Wordle</a></li>
-                <li><a href="./play_connections.html">Play Connections</a></li>
-                <li><a href="./play_wordle.html">Play Wordle</a></li>
-                </ul>
-            </li>
+                <li class="menu-text">JBEETimes</li>
+                <li>
+                    <ul class="menu horizontal">
+                        <li><a href="{{ url_for('create_connections') }}">Create Connections</a></li>
+                        <li><a href="{{ url_for('create_wordle') }}">Create Wordle</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
+        <div class="top-bar-right">
+            <ul class="menu">
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
+
+    <!-- flash messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- create options -->
+    <div class="create-container">
+        <h2>Choose an option below to get started:</h2>
+        <div class="create-options">
+            <div class="create-option">
+                <img src="{{ url_for('static', filename='images/create_connections.jpg') }}" alt="Create Connections" style="max-width: 100%; height: auto;">
+                <a href="{{ url_for('create_connections') }}">Create Connections</a>
+            </div>
+            <div class="create-option">
+                <img src="{{ url_for('static', filename='images/create_wordle.jpg') }}" alt="Create Wordle" style="max-width: 100%; height: auto;">
+                <a href="{{ url_for('create_wordle') }}">Create Wordle</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- foundation js -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).foundation();
+    </script>
 </body>
 </html>

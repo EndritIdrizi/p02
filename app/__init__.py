@@ -46,7 +46,7 @@ def home():
         user = User.get_by_id(session['user_id'])
 
     return render_template(
-        'wordle.html'
+        'homepage.html'
     )
 
 # login route
@@ -162,7 +162,76 @@ def create_game():
         Game.create(title, pairs, session['user_id'], difficulty, game_type)
         flash("Game created successfully!", "Success")
         return redirect(url_for('home'))
-    return render_template('create_game.html')
+    return render_template('create.html')
+
+# create connections route
+@app.route('/create/connections', methods=['GET', 'POST'])
+@login_required
+def create_connections():
+    if request.method == 'POST':
+        # retrieve form data for creating connections
+        connection_name = request.form.get('connection_name').strip()
+        connection_description = request.form.get('connection_description').strip()
+
+        # server-side validation
+        if not connection_name or not connection_description:
+            flash("all fields are required to create a connection.", "danger")
+            return redirect(url_for('create_connections'))
+
+        # insert the new connection into the database
+        try:
+            conn = Database.get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO connections (user_id, name, description) VALUES (?, ?, ?)',
+                (session['user_id'], connection_name, connection_description)
+            )
+            conn.commit()
+            conn.close()
+            flash("connection created successfully!", "success")
+            return redirect(url_for('home'))
+        except sqlite3.IntegrityError:
+            flash("an error occurred while creating the connection. please try again.", "danger")
+            return redirect(url_for('create_connections'))
+
+    return render_template('create_connections.html')
+
+# create wordle route
+@app.route('/create/wordle', methods=['GET', 'POST'])
+@login_required
+def create_wordle():
+    if request.method == 'POST':
+        # retrieve form data for creating wordle
+        wordle_name = request.form.get('wordle_name').strip()
+        wordle_description = request.form.get('wordle_description').strip()
+        wordle_word = request.form.get('wordle_word').strip()
+
+        # server-side validation
+        if not wordle_name or not wordle_description or not wordle_word:
+            flash("all fields are required to create a wordle.", "danger")
+            return redirect(url_for('create_wordle'))
+
+        if len(wordle_word) != 5 or not wordle_word.isalpha():
+            flash("wordle word must be exactly 5 alphabetic characters.", "danger")
+            return redirect(url_for('create_wordle'))
+
+        # insert the new wordle into the database
+        try:
+            conn = Database.get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO wordles (user_id, name, description, word) VALUES (?, ?, ?, ?)',
+                (session['user_id'], wordle_name, wordle_description, wordle_word.lower())
+            )
+            conn.commit()
+            conn.close()
+            flash("wordle created successfully!", "success")
+            return redirect(url_for('home'))
+        except sqlite3.IntegrityError:
+            flash("an error occurred while creating the wordle. please try again.", "danger")
+            return redirect(url_for('create_wordle'))
+
+    return render_template('create_wordle.html')
 
 # view your created games
 @app.route('/my_games', methods=['GET', 'POST'])
