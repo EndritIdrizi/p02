@@ -1,12 +1,29 @@
 //const words = ["banana", "apple", "grape", "mango", "tomato", "spinach", "eggplant", "pumpkin", "hoodie", "shirt", "jacket", "shoes", "endrit", "ben", "ziyad", "minerals"];
 let guesses = 4;
-const groups = document.getElementById("groups").getAttributeContent("content").split(";").split(",");
+const groups = document.getElementById("groups").getAttribute("content").split(";")[0];
 document.getElementById("groups").setAttribute("content", "");
-const group1 = [];
-const group2 = [];
-const group3 = [];
-const group4 = [];
-for (int i = 0; i<20; i++){
+console.log(groups);
+
+/*for (let i = 0; i < 4; i++) {
+	groups[i].split(",");
+	console.log(groups[i]);
+}*/
+
+groups.split(",");
+console.log(groups);
+
+document.getElementById("groups").setAttribute("content", "");
+
+const group1 = groups.split(",").slice(0, 5);
+const group2 = groups.split(",").slice(5, 10);
+const group3 = groups.split(",").slice(10, 15);
+const group4 = groups.split(",").slice(15, 20);
+
+console.log(group1);
+console.log(group2);
+
+/*
+for (let i = 0; i<20; i++){
     if (i<5){
         group1.push(groups[i]);
     }
@@ -20,6 +37,7 @@ for (int i = 0; i<20; i++){
         group4.push(groups[i]);
     }
 }
+*/
 
 
 const words = [];
@@ -76,7 +94,6 @@ function submit(){
 	if (guesses === 0){
 		display.textContent = "You ran out of guesses. The groups were as follows: " + group1[0] + ":" + group1[1] + "," + group1[2] + "," + group1[3] + "," + group1[4] + ";" + group2[0] + ":" + group2[1] + "," + group2[2] + "," + group2[3] + "," + group2[4] + ";" + group3[0] + ":" + group3[1] + "," + group3[2] + "," + group3[3] + "," + group3[4] + ";" + group4[0] + ":" + group4[1] + "," + group4[2] + "," + group4[3] + "," + group4[4];
 	}
-	guesses --;
 	var display = document.getElementById("message");
 	display.textContent = "";
 	var selected = [];
@@ -131,6 +148,7 @@ function submit(){
 		}
 		else{
 			display.textContent = "That is not a group";
+			guesses --;
 			return;
 		}
 	}
