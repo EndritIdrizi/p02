@@ -23,6 +23,16 @@ def setup_database(db_file=Config.DATABASE):
         )
     ''')
 
+    # Create connections table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS connections (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER, name TEXT, 
+            description TEXT,
+            connectionString TEXT
+        )
+    ''')
+
     # Create games table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS games (

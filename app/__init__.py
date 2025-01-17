@@ -170,8 +170,10 @@ def create_game():
 def create_connections():
     if request.method == 'POST':
         # retrieve form data for creating connections
+        print(request.form)
         connection_name = request.form.get('connection_name').strip()
         connection_description = request.form.get('connection_description').strip()
+        connectionString = request.form.get("connection_value")
 
         # server-side validation
         if not connection_name or not connection_description:
@@ -183,8 +185,8 @@ def create_connections():
             conn = Database.get_db_connection()
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO connections (user_id, name, description) VALUES (?, ?, ?)',
-                (session['user_id'], connection_name, connection_description)
+                'INSERT INTO connections (user_id, name, description, connectionString) VALUES (?, ?, ?, ?)',
+                (session['user_id'], connection_name, connection_description, connectionString)
             )
             conn.commit()
             conn.close()

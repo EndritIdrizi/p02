@@ -16,6 +16,9 @@ def wordleTable():
     cursor.execute("CREATE TABLE wordle(id INTEGER PRIMARY KEY, word TEXT NOT NULL, author TEXT NOT NULL, title TEXT NOT NULL)")
     db.commit()
 
+def connectionsTable():
+    cursor.execute("CREATE TABLE connections(id INTEGER PRIMARY KEY, INTEGER user_id, TEXT name, TEXT description)")
+
 # User Helpers
 
 def addUser(name, username, password):
@@ -64,3 +67,4 @@ def addWordle(word, author, title):
 #lessonTable()
 #testTable()
 #wordleTable()
+connectionsTable()

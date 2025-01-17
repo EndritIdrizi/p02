@@ -81,5 +81,17 @@ background: rgba(254, 254, 254, 0.15);
         </div>
         </div>
     </nav>
+
+    <div>
+      <form action="{{ url_for('create_connections') }}" method="POST">
+        <label for="Name">Name:</label>
+        <input type="text" id="connection_name" name="connection_name">
+        <label for="Description">Description:</label>
+        <input type="text" id="connection_description" name="connection_description">
+        <label for="ConnectionString">Connection String:</label>
+        <input type="text" id="connection_value" name="connection_value">
+        <button type="submit" class="button">Create</button>
+      </form>
+    </div>
 </body>
 </html>
