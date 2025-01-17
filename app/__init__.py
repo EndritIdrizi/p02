@@ -13,7 +13,7 @@ from functools import wraps
 from werkzeug.utils import secure_filename
 import requests
 import time
-from models import User, Game, UserGame, Statistic, Database, CompletedGroup
+from models import User, Game, UserGame, Statistic, Database, CompletedGroup, generate_password_hash
 import config
 
 # adding config.py to search path
@@ -53,51 +53,81 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        # retrieve form data
+        username = request.form.get('username').strip()
         password = request.form.get('password')
+
+        # server-side validation
+        if not username or not password:
+            flash("all fields are required.", "danger")
+            return redirect(url_for('login'))
+
+        # fetch user from the database
         user = User.get_by_username(username)
-        if user and user.verify_password(user.password_hash, password):
-            session['user_id'] = user.id
-            flash("Login successful!", "success")
+        if user and User.verify_password(user['password_hash'], password):
+            session['user_id'] = user['id']
+            flash("logged in successfully!", "success")
             return redirect(url_for('home'))
         else:
-            flash("Invalid username or password.", "danger")
+            flash("invalid username or password.", "danger")
+            return redirect(url_for('login'))
+
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
+        name = request.form.get('name').strip()
+        username = request.form.get('username').strip()
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
 
-        # password validation (server-side)
-        errors = []
+        if not name or not username or not password or not confirm_password:
+            flash("All fields are required.", "danger")
+            return redirect(url_for('register'))
+        
+        if username.startswith(' '):
+            flash("Username cannot start with a space.", "danger")
+            return redirect(url_for('register'))
+
         if password != confirm_password:
-            errors.append("Passwords do not match.")
+            flash("Passwords do not match.", "danger")
+            return redirect(url_for('register'))
+
         if len(password) < 12:
-            errors.append("Password must be at least 12 characters long.")
+            flash("Password must be at least 12 characters long.", "danger")
+            return redirect(url_for('register'))
+
         if not any(c.islower() for c in password):
-            errors.append("Password must contain at least one lowercase letter.")
+            flash("Password must contain at least one lowercase letter.", "danger")
+            return redirect(url_for('register'))
+
         if not any(c.isupper() for c in password):
-            errors.append("Password must contain at least one uppercase letter.")
+            flash("Password must contain at least one uppercase letter.", "danger")
+            return redirect(url_for('register'))
+
         if not any(c.isdigit() for c in password):
-            errors.append("Password must contain at least one number.")
-        if not any(c.isalpha() for c in password):
-            errors.append("Password must contain at least one letter.")
-
-        if errors:
-            for error in errors:
-                flash(error, 'danger')
+            flash("Password must contain at least one number.", "danger")
             return redirect(url_for('register'))
 
-        if User.get_by_username(username):
-            flash("Username already exists.", 'danger')
+        # check if username already exists
+        existing_user = User.get_by_username(username)
+        if existing_user:
+            flash("Username already exists. Please choose a different one.", "danger")
             return redirect(url_for('register'))
 
-        User.create(username, password)
-        flash("Account created! Log in now.", 'success')
-        return redirect(url_for('login'))
+        # hash the password
+        hashed_password = generate_password_hash(password)
+
+        # create user
+        try:
+            User.create(username, hashed_password, name)
+            flash("Registration successful! Please log in.", "success")
+            return redirect(url_for('login'))
+        except sqlite3.IntegrityError as e:
+            flash("An error occurred during registration. Please try again.", "danger")
+            return redirect(url_for('register'))
+        
     return render_template('register.html')
 
 @app.route('/logout')

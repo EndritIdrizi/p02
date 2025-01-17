@@ -34,18 +34,24 @@ class User:
     # get user by username
     @staticmethod
     def get_by_username(username):
-        conn = Database.get_db_connection()
-        user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+        conn = sqlite3.connect('site.db')  # Ensure the path is correct
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
+        user = cursor.fetchone()
         conn.close()
         return user
+    
 
     # create a user
     @staticmethod
-    def create(username, password):
-        password_hash = generate_password_hash(password)
-        conn = Database.get_db_connection()
+    def create(username, password_hash, name):
+        conn = sqlite3.connect('site.db')  # Ensure the path is correct
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
+        cursor.execute(
+            'INSERT INTO users (username, password_hash, name) VALUES (?, ?, ?)',
+            (username, password_hash, name)
+        )
         conn.commit()
         conn.close()
 

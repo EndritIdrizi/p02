@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - JBEETimes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
+    <style>
+        /* custom styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .subnav-hero-section {
+            text-align: center;
+            background: #1779ba;
+            background-size: cover;
+            position: relative;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: #fff;
+        }
+
+        .subnav-hero-section .subnav-hero-headline {
+            font-size: 2rem;
+        }
+
+        .subnav-hero-subnav {
+            float: none;
+            position: absolute;
+            text-align: center;
+            margin: 0 auto;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .subnav-hero-subnav li {
+            float: none;
+            display: inline-block;
+        }
+
+        .subnav-hero-subnav li a {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            color: #fefefe;
+            text-transform: uppercase;
+            display: block;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.35s ease-in-out;
+            text-decoration: none;
+        }
+
+        .subnav-hero-subnav li a.is-active,
+        .subnav-hero-subnav li a:hover {
+            background: rgba(254, 254, 254, 0.15);
+        }
+
+        .register-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .register-container label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .register-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .register-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-container button:hover {
+            background-color: #218838;
+        }
+
+        .requirements {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .requirements li {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- header section -->
+    <div class="subnav-hero-section">
+        <h2 class="subnav-hero-headline">Join JBEETimes Today!</h2>
+    </div>
+
+    <!-- navigation bar -->
+    <nav class="top-bar" data-topbar role="navigation">
+        <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+                <li class="menu-text">JBEETimes</li>
+                <li>
+                    <ul class="menu horizontal">
+                        <li><a href="{{ url_for('create_game') }}">Create Game</a></li>
+                        <li><a href="{{ url_for('my_games') }}">My Games</a></li>
+                        <li><a href="{{ url_for('completed_games') }}">Completed Games</a></li>
+                        <li><a href="{{ url_for('credits') }}">Credits</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="top-bar-right">
+            <ul class="menu">
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="is-active">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- flash messages -->
+    <div class="grid-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="callout" data-closable>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
+                            {{ message }}
+                            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- registration form -->
+    <div class="grid-container">
+        <div class="register-container">
+            <h2>Register</h2>
+            <form id="registrationForm" action="{{ url_for('register') }}" method="POST" onsubmit="return validateForm()">
+                <!-- name field -->
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <!-- name requirements (if any) can be added here -->
+
+                <!-- username field -->
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <!-- username requirements -->
+                <ul class="requirements">
+                    <li id="no-space" class="invalid">✖ Cannot start with a space</li>
+                </ul>
+
+                <!-- password field -->
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <!-- password requirements -->
+                <ul class="requirements">
+                    <li id="length" class="invalid">✖ At least 12 characters</li>
+                    <li id="lowercase" class="invalid">✖ At least one lowercase letter</li>
+                    <li id="uppercase" class="invalid">✖ At least one uppercase letter</li>
+                    <li id="number" class="invalid">✖ At least one number</li>
+                </ul>
+
+                <!-- confirm password field -->
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+                <!-- password match requirement -->
+                <ul class="requirements">
+                    <li id="match" class="invalid">✖ Passwords must match</li>
+                </ul>
+
+                <!-- submit button -->
+                <button type="submit">Register</button>
+            </form>
+            <p class="text-center mt-3">
+                Already have an account? <a href="{{ url_for('login') }}">Login here</a>.
+            </p>
+        </div>
+    </div>
+
+    <!-- foundation js -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).foundation();
+    </script>
+
+    <!-- client-side validation script -->
+    <script>
+        // function to validate username requirements
+        function validateUsername() {
+            const username = document.getElementById('username').value;
+            const noSpaceRequirement = document.getElementById('no-space');
+
+            // check if the username starts with a space
+            if (username && username[0] === ' ') {
+                noSpaceRequirement.classList.remove('valid');
+                noSpaceRequirement.classList.add('invalid');
+                noSpaceRequirement.innerHTML = '✖ ' + noSpaceRequirement.textContent.slice(2);
+                return false;
+            } else {
+                noSpaceRequirement.classList.remove('invalid');
+                noSpaceRequirement.classList.add('valid');
+                noSpaceRequirement.innerHTML = '✔ ' + noSpaceRequirement.textContent.slice(2);
+                return true;
+            }
+        }
+
+        // function to validate password requirements
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            const lengthRequirement = document.getElementById('length');
+            const lowercaseRequirement = document.getElementById('lowercase');
+            const uppercaseRequirement = document.getElementById('uppercase');
+            const numberRequirement = document.getElementById('number');
+            const matchRequirement = document.getElementById('match');
+
+            // validate length
+            if (password.length >= 12) {
+                lengthRequirement.classList.remove('invalid');
+                lengthRequirement.classList.add('valid');
+                lengthRequirement.innerHTML = '✔ ' + lengthRequirement.textContent.slice(2);
+            } else {
+                lengthRequirement.classList.remove('valid');
+                lengthRequirement.classList.add('invalid');
+                lengthRequirement.innerHTML = '✖ ' + lengthRequirement.textContent.slice(2);
+            }
+
+            // validate lowercase
+            if (/[a-z]/.test(password)) {
+                lowercaseRequirement.classList.remove('invalid');
+                lowercaseRequirement.classList.add('valid');
+                lowercaseRequirement.innerHTML = '✔ ' + lowercaseRequirement.textContent.slice(2);
+            } else {
+                lowercaseRequirement.classList.remove('valid');
+                lowercaseRequirement.classList.add('invalid');
+                lowercaseRequirement.innerHTML = '✖ ' + lowercaseRequirement.textContent.slice(2);
+            }
+
+            // validate uppercase
+            if (/[A-Z]/.test(password)) {
+                uppercaseRequirement.classList.remove('invalid');
+                uppercaseRequirement.classList.add('valid');
+                uppercaseRequirement.innerHTML = '✔ ' + uppercaseRequirement.textContent.slice(2);
+            } else {
+                uppercaseRequirement.classList.remove('valid');
+                uppercaseRequirement.classList.add('invalid');
+                uppercaseRequirement.innerHTML = '✖ ' + uppercaseRequirement.textContent.slice(2);
+            }
+
+            // validate number
+            if (/[0-9]/.test(password)) {
+                numberRequirement.classList.remove('invalid');
+                numberRequirement.classList.add('valid');
+                numberRequirement.innerHTML = '✔ ' + numberRequirement.textContent.slice(2);
+            } else {
+                numberRequirement.classList.remove('valid');
+                numberRequirement.classList.add('invalid');
+                numberRequirement.innerHTML = '✖ ' + numberRequirement.textContent.slice(2);
+            }
+
+            // validate password match
+            if (password === confirmPassword && password !== '') {
+                matchRequirement.classList.remove('invalid');
+                matchRequirement.classList.add('valid');
+                matchRequirement.innerHTML = '✔ ' + matchRequirement.textContent.slice(2);
+            } else {
+                matchRequirement.classList.remove('valid');
+                matchRequirement.classList.add('invalid');
+                matchRequirement.innerHTML = '✖ ' + matchRequirement.textContent.slice(2);
+            }
+        }
+
+        // function to validate the entire form before submission
+        function validateForm() {
+            const isUsernameValid = validateUsername();
+            validatePassword(); // ensure all password checks are updated
+
+            const validElements = document.querySelectorAll('.valid');
+            const invalidElements = document.querySelectorAll('.invalid');
+
+            // check if all requirements are met
+            if (invalidElements.length === 0 && validElements.length >= 5) {
+                return true;
+            } else {
+                alert('please ensure all registration requirements are met.');
+                return false;
+            }
+        }
+
+        // add event listeners for real-time validation
+        document.getElementById('username').addEventListener('input', validateUsername);
+        document.getElementById('password').addEventListener('input', validatePassword);
+        document.getElementById('confirm_password').addEventListener('input', validatePassword);
+    </script>
+</body>
+</html>
+

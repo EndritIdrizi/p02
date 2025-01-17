@@ -1,85 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - JBEETimes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
-  <title>Login</title>
-  <style>
-  .subnav-hero-section {
-text-align: center;
-background: #1779ba;
-background-size: cover;
-position: relative;
-overflow: visible;
-display: -webkit-flex;
-display: -ms-flexbox;
-display: flex;
--webkit-align-items: center;
-  -ms-flex-align: center;
-      align-items: center;
--webkit-justify-content: center;
-  -ms-flex-pack: center;
-      justify-content: center;
-height: 300px;
-}
+    <style>
+    .subnav-hero-section {
+        text-align: center;
+        background: #1779ba;
+        background-size: cover;
+        position: relative;
+        overflow: visible;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+    }
 
-.subnav-hero-section .subnav-hero-headline {
-color: #fefefe;
-}
+    .subnav-hero-section .subnav-hero-headline {
+        color: #fefefe;
+        font-size: 2.5rem;
+    }
 
-.subnav-hero-subnav {
-float: none;
-position: absolute;
-text-align: center;
-margin: 0 auto;
-bottom: 0;
-width: 100%;
-}
+    .subnav-hero-subnav {
+        float: none;
+        position: absolute;
+        text-align: center;
+        margin: 0 auto;
+        bottom: 0;
+        width: 100%;
+    }
 
-.subnav-hero-subnav li {
-float: none;
-display: inline-block;
-}
+    .subnav-hero-subnav li {
+        float: none;
+        display: inline-block;
+    }
 
-.subnav-hero-subnav li a {
-padding: 0.9rem 1rem;
-font-size: 0.75rem;
-color: #fefefe;
-text-transform: uppercase;
-display: block;
-font-weight: bold;
-letter-spacing: 1px;
-transition: all 0.35s ease-in-out;
-}
+    .subnav-hero-subnav li a {
+        padding: 0.9rem 1rem;
+        font-size: 0.75rem;
+        color: #fefefe;
+        text-transform: uppercase;
+        display: block;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: all 0.35s ease-in-out;
+        text-decoration: none;
+    }
 
-.subnav-hero-subnav li a.is-active {
-background: rgba(254, 254, 254, 0.15);
-}
+    .subnav-hero-subnav li a.is-active,
+    .subnav-hero-subnav li a:hover {
+        background: rgba(254, 254, 254, 0.15);
+    }
 
-.subnav-hero-subnav li a:hover {
-background: rgba(254, 254, 254, 0.15);
-}
-  </style>
+    .login-form {
+        max-width: 400px;
+        margin: 50px auto;
+    }
+
+    .login-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-form label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    .login-form button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 20px;
+    }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
     <nav class="scrollhide-nav">
         <div class="top-bar">
-        <div class="top-bar-left">
-            <ul class="dropdown menu" data-dropdown-menu>
-            <li class="menu-text">JBEETimes</li>
-            <li>
-                <ul class="menu horizontal">
-                <li><a href="./create_connections.html">Create Connections</a></li>
-                <li><a href="./create_wordle.html">Create Wordle</a></li>
-                <li><a href="./play_connections.html">Play Connections</a></li>
-                <li><a href="./play_wordle.html">Play Wordle</a></li>
+            <div class="top-bar-left">
+                <ul class="dropdown menu" data-dropdown-menu>
+                    <li class="menu-text">JBEETimes</li>
+                    <li>
+                        <ul class="menu horizontal">
+                            <li><a href="{{ url_for('create_game') }}">Create Game</a></li>
+                            <li><a href="{{ url_for('my_games') }}">My Games</a></li>
+                            <li><a href="{{ url_for('completed_games') }}">Completed Games</a></li>
+                            <li><a href="{{ url_for('credits') }}">Credits</a></li>
+                        </ul>
+                    </li>
                 </ul>
-            </li>
-            </ul>
-        </div>
+            </div>
+            <div class="top-bar-right">
+                <ul class="menu">
+                    {% if session.get('user_id') %}
+                        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </nav>
+
+    <!-- flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="callout" data-closable>
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- login form -->
+    <div class="grid-container">
+        <div class="login-form">
+            <h2>Login</h2>
+            <form action="{{ url_for('login') }}" method="POST">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit" class="button">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- foundation js -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).foundation();
+    </script>
 </body>
 </html>
