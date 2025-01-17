@@ -426,7 +426,7 @@ def play_connections(game_id):
     
     user_id = session['user_id']
 
-    # Initialize game state in session if not present
+    # init game state in session if not present
     if 'connections_game' not in session or session['connections_game']['game_id'] != game_id:
         session['connections_game'] = {
             'game_id': game_id,
@@ -441,8 +441,8 @@ def play_connections(game_id):
         if len(selected_words) != 4:
             return jsonify({'status': 'error', 'message': 'You must select exactly four words.'}), 400
 
-        # Parse the groups from the game
-        groups = game['pairs'].split(';')  # Assuming each group is separated by ';'
+        # parse the groups from the game
+        groups = game['pairs'].split(';')  # assuming each group is separated by ';'
         parsed_groups = []
         for group in groups:
             parts = group.split(',')
@@ -450,7 +450,7 @@ def play_connections(game_id):
             group_words = [word.strip().lower() for word in parts[1:]]
             parsed_groups.append({'name': group_name, 'words': group_words})
 
-        # Check if the selected words match any group
+        # check if the selected words match any group
         matched_group = None
         for grp in parsed_groups:
             if set(selected_words) == set(grp['words']) and grp['name'] not in session['connections_game']['completed_groups']:
@@ -458,15 +458,14 @@ def play_connections(game_id):
                 break
 
         if matched_group:
-            # Mark group as completed
+            # mark group as completed
             CompletedGroup.create(user_id, game_id, matched_group['name'])
             session['connections_game']['completed_groups'].append(matched_group['name'])
 
-            # Update user statistics (e.g., credits)
-            # For example, award 100 credits per completed group
+            # update user statistics
             if 'credits' not in session:
                 session['credits'] = 0
-            session['credits'] += 100  # Adjust as needed
+            session['credits'] += 100 
 
             return jsonify({'status': 'success', 'message': f"Found group: {matched_group['name']}"})
         else:
@@ -475,6 +474,18 @@ def play_connections(game_id):
     # On GET, render the play_connections.html template
     completed_groups = session['connections_game']['completed_groups']
     return render_template('play_connections.html', game=game, completed_groups=completed_groups)
+
+@app.route('/wordle', methods=['GET'])
+@login_required
+def list_wordle():
+    wordles = Game.get_all_wordles_by_user(session['user_id'])
+    return render_template('wordle.html', wordles=wordles)
+
+@app.route('/connections', methods=['GET'])
+@login_required
+def list_connections():
+    connections = Game.get_all_connections_by_user(session['user_id'])
+    return render_template('connections.html', connections=connections)
 
 # error handlers
 @app.errorhandler(404)

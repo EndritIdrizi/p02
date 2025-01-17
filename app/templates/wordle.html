@@ -1,99 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta id="word" content={{ myWord }}>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Games - JBEETimes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
-  <title>Wordle: {{ wordleTitle }}</title>
-  <style>
-    #results {
-      margin-top: 20px;
-    }
-    #results div {
-      display: flex;
-    }
-    .subnav-hero-section {
-        text-align: center;
-        background: #1779ba;
-        background-size: cover;
-        position: relative;
-        overflow: visible;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-align-items: center;
-          -ms-flex-align: center;
-              align-items: center;
-        -webkit-justify-content: center;
-          -ms-flex-pack: center;
-              justify-content: center;
-        height: 300px;
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
 
-    .subnav-hero-section .subnav-hero-headline {
-        color: #fefefe;
-    }
+        .subnav-hero-section {
+            text-align: center;
+            background: #1779ba;
+            background-size: cover;
+            position: relative;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: #fff;
+        }
 
-    .subnav-hero-subnav {
-        float: none;
-        position: absolute;
-        text-align: center;
-        margin: 0 auto;
-        bottom: 0;
-        width: 100%;
-    }
+        .subnav-hero-section .subnav-hero-headline {
+            font-size: 2rem;
+        }
 
-    .subnav-hero-subnav li {
-        float: none;
-        display: inline-block;
-    }
+        .games-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-    .subnav-hero-subnav li a {
-        padding: 0.9rem 1rem;
-        font-size: 0.75rem;
-        color: #fefefe;
-        text-transform: uppercase;
-        display: block;
-        font-weight: bold;
-        letter-spacing: 1px;
-        transition: all 0.35s ease-in-out;
-    }
+        .games-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
 
-    .subnav-hero-subnav li a.is-active {
-        background: rgba(254, 254, 254, 0.15);
-    }
+        .game-list {
+            list-style: none;
+            padding: 0;
+        }
 
-    .subnav-hero-subnav li a:hover {
-        background: rgba(254, 254, 254, 0.15);
-    }
-  </style>
+        .game-item {
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .game-item:last-child {
+            border-bottom: none;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            color: #1779ba;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .game-title:hover {
+            color: #0d5c9c;
+        }
+
+        .game-description {
+            color: #555;
+            margin-top: 5px;
+        }
+
+        /* Flash messages styling */
+        .flash-messages {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Wordle</h1>
-  <nav class="scrollhide-nav">
-      <div class="top-bar">
-      <div class="top-bar-left">
-          <ul class="dropdown menu" data-dropdown-menu>
-          <li class="menu-text">JBEETimes</li>
-          <li>
-              <ul class="menu horizontal">
-              <li><a href="./create_connections.html">Create Connections</a></li>
-              <li><a href="./create_wordle.html">Create Wordle</a></li>
-              <li><a href="./play_connections.html">Play Connections</a></li>
-              <li><a href="./play_wordle.html">Play Wordle</a></li>
-              </ul>
-          </li>
-          </ul>
-      </div>
-      </div>
-  </nav>
-  <input type="text" id="wordInput" maxlength="5" placeholder="Enter a 5-letter word" />
-  <button id="checkButton">Check</button>
-  <div id="error-message"></div>
-  <div id="results"></div>
+    <div class="subnav-hero-section">
+        <h2 class="subnav-hero-headline">Wordle Games</h2>
+    </div>
 
-  <script src="../static/js/wordle.js"></script>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
+    <div class="games-container">
+        <h2>Your Created Wordle Games</h2>
+        {% if wordles %}
+            <ul class="game-list">
+                {% for wordle in wordles %}
+                    <li class="game-item">
+                        <a href="{{ url_for('play_wordle', game_id=wordle['id']) }}" class="game-title">{{ wordle['name'] }}</a>
+                        <div class="game-description">{{ wordle['description'] }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have not created any Wordle games yet. <a href="{{ url_for('create_wordle') }}">Create one now!</a></p>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).foundation();
+    </script>
 </body>
 </html>
