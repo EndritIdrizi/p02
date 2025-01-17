@@ -37,6 +37,8 @@ Our project is essentially a more advanced version of the New York Times ‘Game
 - Next Up - S4-E2, Pt. 2 - JBEE
 - Heart On Ice - JBEE
 - With Me Or Not? - JBEE
+
+Note: NO API KEYS NEEDED
   
 ---  
 
