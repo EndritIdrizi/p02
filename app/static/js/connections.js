@@ -1,6 +1,7 @@
 //const words = ["banana", "apple", "grape", "mango", "tomato", "spinach", "eggplant", "pumpkin", "hoodie", "shirt", "jacket", "shoes", "endrit", "ben", "ziyad", "minerals"];
-
+let guesses = 4;
 const groups = document.getElementById("groups").getAttributeContent("content").split(";").split(",");
+document.getElementById("groups").setAttribute("content", "");
 const group1 = [];
 const group2 = [];
 const group3 = [];
@@ -72,6 +73,10 @@ function changeColor(n) {
 }*/
 
 function submit(){
+	if (guesses === 0){
+		display.textContent = "You ran out of guesses. The groups were as follows: " + group1[0] + ":" + group1[1] + "," + group1[2] + "," + group1[3] + "," + group1[4] + ";" + group2[0] + ":" + group2[1] + "," + group2[2] + "," + group2[3] + "," + group2[4] + ";" + group3[0] + ":" + group3[1] + "," + group3[2] + "," + group3[3] + "," + group3[4] + ";" + group4[0] + ":" + group4[1] + "," + group4[2] + "," + group4[3] + "," + group4[4];
+	}
+	guesses --;
 	var display = document.getElementById("message");
 	display.textContent = "";
 	var selected = [];
@@ -93,7 +98,7 @@ function submit(){
 	else{
 		//console.log(selected);
 		if(group1.slice(1).sort().join(",") == selected.sort().join(",")){
-			display.textContent = "found " + group1[0];
+			display.textContent = "Found " + group1[0];
 			for (let s = 0; s<4; s++){
 				console.log(selectedNums[s]);
 				document.getElementById(selectedNums[s]).style.backgroundColor = "green";
@@ -101,7 +106,7 @@ function submit(){
 			return;
 		}
 		else if(group2.slice(1).sort().join(",") == selected.sort().join(",")){
-			display.textContent = "found " + group2[0];
+			display.textContent = "Found " + group2[0];
 			for (let s = 0; s<4; s++){
 				console.log(selectedNums[s]);
 				document.getElementById(selectedNums[s]).style.backgroundColor = "yellow";
@@ -109,7 +114,7 @@ function submit(){
 			return;
 		}
 		else if(group3.slice(1).sort().join(",") == selected.sort().join(",")){
-			display.textContent = "found " + group3[0];
+			display.textContent = "Found " + group3[0];
 			for (let s = 0; s<4; s++){
 				console.log(selectedNums[s]);
 				document.getElementById(selectedNums[s]).style.backgroundColor = "blue";
@@ -117,7 +122,7 @@ function submit(){
 			return;
 		}
 		else if(group4.slice(1).sort().join(",") == selected.sort().join(",")){
-			display.textContent = "found " + group4[0];
+			display.textContent = "Found " + group4[0];
 			for (let s = 0; s<4; s++){
 				console.log(selectedNums[s]);
 				document.getElementById(selectedNums[s]).style.backgroundColor = "purple";
@@ -125,7 +130,7 @@ function submit(){
 			return;
 		}
 		else{
-			display.textContent = "fail";
+			display.textContent = "That is not a group";
 			return;
 		}
 	}
