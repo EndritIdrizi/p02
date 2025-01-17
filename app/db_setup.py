@@ -40,6 +40,7 @@ def setup_database(db_file=Config.DATABASE):
             title TEXT NOT NULL,
             pairs TEXT NOT NULL,
             user_id INTEGER NOT NULL,
+            description TEXT,
             difficulty TEXT NOT NULL,
             type TEXT NOT NULL, -- "wordle" or "connections"
             FOREIGN KEY(user_id) REFERENCES users(id)
