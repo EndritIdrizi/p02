@@ -4,7 +4,7 @@ import bcrypt
 
 
 #Create SQLite Table, creates if not already made
-db = sqlite3.connect("database.db", check_same_thread=False)
+db = sqlite3.connect("site.db", check_same_thread=False)
 cursor = db.cursor()
 
 #Create a User Table

@@ -1,7 +1,10 @@
 // Predefined word to check against - To be replaced with word from database
-const savedWord = document.getElementById("word").getAttributeContent("content");
-document.getElementById("word").setAttribute("content", "");
+let savedWord = document.getElementById("word").getAttribute("content");
+// document.getElementById("word").setAttribute("content", "");
 let guesses = 6;
+console.log(savedWord);
+
+savedWord = savedWord.toLowerCase();
 
 function checkWord() {
 	const userInput = document.getElementById("wordInput").value.toLowerCase();
@@ -79,7 +82,7 @@ function checkWord() {
 
 	// Clear the input field for the next guess
 	document.getElementById("wordInput").value = "";
-	guesses -- 1;
+	guesses--;
 	errorElement.textContent = guesses + " guesses left!";
 }
 

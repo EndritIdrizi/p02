@@ -28,6 +28,37 @@
             font-size: 2rem;
         }
 
+        .subnav-hero-subnav {
+            float: none;
+            position: absolute;
+            text-align: center;
+            margin: 0 auto;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .subnav-hero-subnav li {
+            float: none;
+            display: inline-block;
+        }
+
+        .subnav-hero-subnav li a {
+            padding: 0.9rem 1rem;
+            font-size: 0.75rem;
+            color: #fefefe;
+            text-transform: uppercase;
+            display: block;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.35s ease-in-out;
+            text-decoration: none;
+        }
+
+        .subnav-hero-subnav li a.is-active,
+        .subnav-hero-subnav li a:hover {
+            background: rgba(254, 254, 254, 0.15);
+        }
+
         .games-container {
             max-width: 800px;
             margin: 50px auto;
@@ -51,7 +82,10 @@
 
         .game-item {
             padding: 15px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .game-item:last-child {
@@ -59,10 +93,11 @@
         }
 
         .game-title {
-            font-size: 1.2rem;
-            color: #1779ba;
             text-decoration: none;
+            color: #1779ba;
             font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
         }
 
         .game-title:hover {
@@ -70,8 +105,8 @@
         }
 
         .game-description {
-            color: #555;
-            margin-top: 5px;
+            color: #666;
+            font-size: 0.95rem;
         }
 
         /* Flash messages styling */
@@ -106,8 +141,15 @@
     </style>
 </head>
 <body>
+    <!-- Header Section -->
     <div class="subnav-hero-section">
-        <h2 class="subnav-hero-headline">Wordle Games</h2>
+        <h2 class="subnav-hero-headline">Connections Games</h2>
+        <ul class="subnav-hero-subnav">
+            <li><a href="{{ url_for('create_connections') }}">Create Connections</a></li>
+            <li><a href="{{ url_for('create_wordle') }}">Create Wordle</a></li>
+            <li><a href="{{ url_for('connections') }}">Play Connections</a></li>
+            <li><a href="{{ url_for('wordle') }}" class="is-active">Play Wordle</a></li>
+        </ul>
     </div>
 
     <div class="flash-messages">
@@ -128,8 +170,11 @@
             <ul class="game-list">
                 {% for wordle in wordles %}
                     <li class="game-item">
+                    <div>
                         <a href="{{ url_for('play_wordle', game_id=wordle['id']) }}" class="game-title">{{ wordle['name'] }}</a>
                         <div class="game-description">{{ wordle['description'] }}</div>
+                    </div>
+                    <a href="{{ url_for('play_game', game_id=wordle['id']) }}" class="button">Play Now</a>
                     </li>
                 {% endfor %}
             </ul>

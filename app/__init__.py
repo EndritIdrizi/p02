@@ -232,7 +232,7 @@ def create_wordle():
             return redirect(url_for('create_wordle'))
 
         # Define difficulty (you can modify this as per your requirements)
-        difficulty = "Medium"  # Example: 'Easy', 'Medium', 'Hard'
+        difficulty = "Medium"  
 
         # Insert the new Wordle into the 'games' table with type 'wordle'
         try:
@@ -330,7 +330,7 @@ def play_wordle(game_id):
             return redirect(url_for('play_wordle', game_id=game_id))
 
         # game logic
-        saved_word = session['wordle_game']['saved_word']
+        saved_word = Game.get_word(game_id)
         session['wordle_game']['attempts'] += 1
 
         # check if the guess is correct
@@ -342,7 +342,7 @@ def play_wordle(game_id):
             Statistic.update(session['user_id'], 'Wordle', won_on_first_attempt=(session['wordle_game']['attempts'] == 1))
             # play congratulatory music
             music_files = get_congrats_music()
-            return render_template('congrats.html', music_files=music_files)
+            return render_template('homepage.html')
 
         # add guess to guesses
         session['wordle_game']['guesses'].append(user_guess)
@@ -360,9 +360,10 @@ def play_wordle(game_id):
         flash("Keep trying!", "info")
         return redirect(url_for('play_wordle', game_id=game_id))
 
-    # retrieve game state
+    # saved_word = 'Hello'
+    saved_word = Game.get_word(game_id)
     wordle_game = session.get('wordle_game', {})
-    return render_template('play_wordle.html', game=game, wordle_game=wordle_game)
+    return render_template('play_wordle.html', game=game, wordle_game=wordle_game, myWord=saved_word)
 
 def extract_saved_word(pairs):
     return pairs.split(';')[0].strip().lower() 

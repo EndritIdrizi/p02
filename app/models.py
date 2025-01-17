@@ -73,6 +73,8 @@ class Game:
         ''', (title, pairs, author_id, difficulty, game_type))
         conn.commit()
         conn.close()
+        
+
 
     # get aall games avaialble
     @staticmethod
@@ -90,7 +92,15 @@ class Game:
         wordles = cursor.fetchall()
         conn.close()
         return wordles
-
+    
+    @staticmethod
+    def get_word(id):
+        conn = Database.get_db_connection()
+        cursor = conn.cursor()
+        word = cursor.execute('SELECT pairs FROM games WHERE id = ?', (id,)).fetchone()[0]
+        conn.close()
+        return word
+        
     @staticmethod
     def get_all_connections_by_user(user_id):
         conn = Database.get_db_connection()
