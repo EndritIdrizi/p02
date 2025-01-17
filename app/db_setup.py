@@ -84,16 +84,6 @@ def setup_database(db_file=Config.DATABASE):
             FOREIGN KEY(game_id) REFERENCES games(id)
         );
     ''')
-    
-    # Create wordle table
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS wordles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER, name TEXT, 
-            description TEXT,
-            word TEXT
-        )
-    ''')
 
     conn.commit()
     conn.close()

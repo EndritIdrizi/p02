@@ -34,7 +34,7 @@ class User:
     # get user by username
     @staticmethod
     def get_by_username(username):
-        conn = sqlite3.connect('site.db')  # Ensure the path is correct
+        conn = Database.get_db_connection()
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
@@ -46,7 +46,7 @@ class User:
     # create a user
     @staticmethod
     def create(username, password_hash, name):
-        conn = sqlite3.connect('site.db')  # Ensure the path is correct
+        conn = Database.get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
             'INSERT INTO users (username, password_hash, name) VALUES (?, ?, ?)',
@@ -104,9 +104,10 @@ class Game:
     @staticmethod
     def get_by_id(game_id):
         conn = Database.get_db_connection()
-        game = conn.execute('SELECT * FROM games WHERE id = ?', (game_id,)).fetchone()[0]
+        game = conn.execute('SELECT * FROM games WHERE id = ?', (game_id,)).fetchone()
         conn.close()
         return game
+
 
 class UserGame:
     # create a game.

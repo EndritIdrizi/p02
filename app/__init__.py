@@ -213,39 +213,49 @@ def create_connections():
 
     return render_template('create_connections.html')
 
-# create wordle route
 @app.route('/create/wordle', methods=['GET', 'POST'])
 @login_required
 def create_wordle():
     if request.method == 'POST':
-        # retrieve form data for creating wordle
-        wordle_name = request.form.get('wordle_name').strip()
-        wordle_description = request.form.get('wordle_description').strip()
-        wordle_word = request.form.get('wordle_value').strip()
+        # Retrieve form data for creating Wordle
+        wordle_name = request.form.get('wordle_name', '').strip()
+        wordle_description = request.form.get('wordle_description', '').strip()
+        wordle_word = request.form.get('wordle_value', '').strip()
 
-        # server-side validation
+        # Server-side validation
         if not wordle_name or not wordle_description or not wordle_word:
-            flash("all fields are required to create a wordle.", "danger")
+            flash("All fields are required to create a Wordle.", "danger")
             return redirect(url_for('create_wordle'))
 
         if len(wordle_word) != 5 or not wordle_word.isalpha():
-            flash("wordle word must be exactly 5 alphabetic characters.", "danger")
+            flash("Wordle word must be exactly 5 alphabetic characters.", "danger")
             return redirect(url_for('create_wordle'))
 
-        # insert the new wordle into the database
+        # Define difficulty (you can modify this as per your requirements)
+        difficulty = "Medium"  # Example: 'Easy', 'Medium', 'Hard'
+
+        # Insert the new Wordle into the 'games' table with type 'wordle'
         try:
             conn = Database.get_db_connection()
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO wordles (user_id, name, description, word) VALUES (?, ?, ?, ?)',
-                (session['user_id'], wordle_name, wordle_description, wordle_word.lower())
+                '''
+                INSERT INTO games (title, description, pairs, user_id, difficulty, type) 
+                VALUES (?, ?, ?, ?, ?, ?)
+                ''',
+                (wordle_name, wordle_description, wordle_word.lower(), session['user_id'], difficulty, "wordle")
             )
             conn.commit()
             conn.close()
-            flash("wordle created successfully!", "success")
-            return redirect(url_for('home'))
-        except sqlite3.IntegrityError:
-            flash("an error occurred while creating the wordle. please try again.", "danger")
+            flash("Wordle created successfully!", "success")
+            return redirect(url_for('wordle'))
+        except sqlite3.IntegrityError as e:
+            app.logger.error(f"IntegrityError while creating Wordle: {e}")
+            flash("An error occurred while creating the Wordle. Please try again.", "danger")
+            return redirect(url_for('create_wordle'))
+        except Exception as e:
+            app.logger.error(f"Unexpected error while creating Wordle: {e}")
+            flash("An unexpected error occurred. Please try again.", "danger")
             return redirect(url_for('create_wordle'))
 
     return render_template('create_wordle.html')
@@ -443,7 +453,7 @@ def play_connections(game_id):
     
     user_id = session['user_id']
 
-    # init game state in session if not present
+    # Initialize game state in session if not present
     if 'connections_game' not in session or session['connections_game']['game_id'] != game_id:
         session['connections_game'] = {
             'game_id': game_id,
@@ -458,7 +468,7 @@ def play_connections(game_id):
         if len(selected_words) != 4:
             return jsonify({'status': 'error', 'message': 'You must select exactly four words.'}), 400
 
-        # parse the groups from the game
+        # Parse the groups from the game
         groups = game['pairs'].split(';')  # assuming each group is separated by ';'
         parsed_groups = []
         for group in groups:
@@ -467,7 +477,7 @@ def play_connections(game_id):
             group_words = [word.strip().lower() for word in parts[1:]]
             parsed_groups.append({'name': group_name, 'words': group_words})
 
-        # check if the selected words match any group
+        # Check if the selected words match any group
         matched_group = None
         for grp in parsed_groups:
             if set(selected_words) == set(grp['words']) and grp['name'] not in session['connections_game']['completed_groups']:
@@ -475,11 +485,11 @@ def play_connections(game_id):
                 break
 
         if matched_group:
-            # mark group as completed
+            # Mark group as completed
             CompletedGroup.create(user_id, game_id, matched_group['name'])
             session['connections_game']['completed_groups'].append(matched_group['name'])
 
-            # update user statistics
+            # Update user statistics
             if 'credits' not in session:
                 session['credits'] = 0
             session['credits'] += 100 
@@ -488,9 +498,13 @@ def play_connections(game_id):
         else:
             return jsonify({'status': 'fail', 'message': "Incorrect selection. Try again."}), 400
 
-    # On GET, render the play_connections.html template
+    # On GET, prepare the groups and render the template
+    groups = game['pairs'].split(';')  # Extract groups from 'pairs'
+    groups = [word.strip() for word in groups]  # Clean up any whitespace
+
     completed_groups = session['connections_game']['completed_groups']
-    return render_template('play_connections.html', game=game, completed_groups=completed_groups)
+    return render_template('play_connections.html', game=game, completed_groups=completed_groups, groups=groups)
+
 
 @app.route('/wordle', methods=['GET'])
 @login_required
