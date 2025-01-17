@@ -18,8 +18,8 @@ endritI -- 2025-01-08 22:27
   * added new version of design document
   
 benR -- 2025-01-09 22:34
-* Created requirements.txt
-* Adding if name = main portion in __init__
+  * Created requirements.txt
+  * Adding if name = main portion in __init__
 
 endritI -- 2025-01-13 10:36
   * added readme for keys
@@ -38,7 +38,7 @@ benR -- 2025-01-13-19:33
   * added basic models file to import to app
   
 benR -- 2025-01-14 11:43
-    * Added more routes to init py including play game, get all games, etc
+  * Added more routes to init py including play game, get all games, etc
 
 benR -- 2025-01-14 22:01
   * Added play world functionality
@@ -49,6 +49,9 @@ vedantK -- 2025-1-15 11:45
   * Made fully functioning, accessible navbar
   
 benR -- 2025-1-16 11:36
-    * Completed flask
-    * added user_game back to models
-    * nemmzz is quite good i can't lie. He is prob better than JBEE, considering changing the name. 
+  * Completed flask
+  * added user_game back to models
+  * nemmzz is quite good i can't lie. He is prob better than JBEE, considering changing the name. 
+
+vedantK -- 2025-1-17 00:55
+  * Updated readme with "NO API KEYS NEEDED"
