@@ -1,85 +1,198 @@
+<!-- templates/connections.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connections Games - JBEETimes</title>
+    <!-- Foundation CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/css/foundation.min.css" crossorigin="anonymous">
-  <title>Play Connections</title>
-  <style>
-  .subnav-hero-section {
-text-align: center;
-background: #1779ba;
-background-size: cover;
-position: relative;
-overflow: visible;
-display: -webkit-flex;
-display: -ms-flexbox;
-display: flex;
--webkit-align-items: center;
-  -ms-flex-align: center;
-      align-items: center;
--webkit-justify-content: center;
-  -ms-flex-pack: center;
-      justify-content: center;
-height: 300px;
-}
+    <style>
+        /* Custom styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
 
-.subnav-hero-section .subnav-hero-headline {
-color: #fefefe;
-}
+        .subnav-hero-section {
+            text-align: center;
+            background: #1779ba;
+            background-size: cover;
+            position: relative;
+            overflow: visible;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: #fff;
+        }
 
-.subnav-hero-subnav {
-float: none;
-position: absolute;
-text-align: center;
-margin: 0 auto;
-bottom: 0;
-width: 100%;
-}
+        .subnav-hero-section .subnav-hero-headline {
+            font-size: 2rem;
+        }
 
-.subnav-hero-subnav li {
-float: none;
-display: inline-block;
-}
+        .subnav-hero-subnav {
+            float: none;
+            position: absolute;
+            text-align: center;
+            margin: 0 auto;
+            bottom: 0;
+            width: 100%;
+        }
 
-.subnav-hero-subnav li a {
-padding: 0.9rem 1rem;
-font-size: 0.75rem;
-color: #fefefe;
-text-transform: uppercase;
-display: block;
-font-weight: bold;
-letter-spacing: 1px;
-transition: all 0.35s ease-in-out;
-}
+        .subnav-hero-subnav li {
+            float: none;
+            display: inline-block;
+        }
 
-.subnav-hero-subnav li a.is-active {
-background: rgba(254, 254, 254, 0.15);
-}
+        .subnav-hero-subnav li a {
+            padding: 0.9rem 1rem;
+            font-size: 0.75rem;
+            color: #fefefe;
+            text-transform: uppercase;
+            display: block;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.35s ease-in-out;
+            text-decoration: none;
+        }
 
-.subnav-hero-subnav li a:hover {
-background: rgba(254, 254, 254, 0.15);
-}
-  </style>
+        .subnav-hero-subnav li a.is-active,
+        .subnav-hero-subnav li a:hover {
+            background: rgba(254, 254, 254, 0.15);
+        }
+
+        .games-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .games-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .game-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .game-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-item:last-child {
+            border-bottom: none;
+        }
+
+        .game-title {
+            text-decoration: none;
+            color: #1779ba;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .game-title:hover {
+            color: #0d5c9c;
+        }
+
+        .game-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Flash messages styling */
+        .flash-messages {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Play Connections</h1>
-    <nav class="scrollhide-nav">
-        <div class="top-bar">
-        <div class="top-bar-left">
-            <ul class="dropdown menu" data-dropdown-menu>
-            <li class="menu-text">JBEETimes</li>
-            <li>
-                <ul class="menu horizontal">
-                <li><a href="./create_connections.html">Create Connections</a></li>
-                <li><a href="./create_wordle.html">Create Wordle</a></li>
-                <li><a href="./play_connections.html">Play Connections</a></li>
-                <li><a href="./play_wordle.html">Play Wordle</a></li>
-                </ul>
-            </li>
+    <!-- Header Section -->
+    <div class="subnav-hero-section">
+        <h2 class="subnav-hero-headline">Connections Games</h2>
+        <ul class="subnav-hero-subnav">
+            <li><a href="{{ url_for('create_connections') }}">Create Connections</a></li>
+            <li><a href="{{ url_for('create_wordle') }}">Create Wordle</a></li>
+            <li><a href="{{ url_for('connections') }}" class="is-active">Play Connections</a></li>
+            <li><a href="{{ url_for('wordle') }}">Play Wordle</a></li>
+        </ul>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Connections Games List -->
+    <div class="games-container">
+        <h2>Your Connections Games</h2>
+        {% if connections %}
+            <ul class="game-list">
+                {% for connection in connections %}
+                    <li class="game-item">
+                        <div>
+                            <a href="{{ url_for('play_game', game_id=connection['id']) }}" class="game-title">{{ connection['title'] }}</a>
+                            <div class="game-description">{{ connection['description'] }}</div>
+                        </div>
+                        <a href="{{ url_for('play_game', game_id=connection['id']) }}" class="button">Play Now</a>
+                    </li>
+                {% endfor %}
             </ul>
-        </div>
-        </div>
-    </nav>
+        {% else %}
+            <p>You have not created any Connections games yet. <a href="{{ url_for('create_connections') }}">Create one now!</a></p>
+        {% endif %}
+    </div>
+
+    <!-- Foundation JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.9.0/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).foundation();
+    </script>
 </body>
 </html>

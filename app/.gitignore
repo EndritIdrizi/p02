@@ -1,0 +1,5 @@
+# Pycache
+*.pyc
+
+# Database
+*.db
