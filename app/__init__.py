@@ -206,7 +206,7 @@ def create_wordle():
         # retrieve form data for creating wordle
         wordle_name = request.form.get('wordle_name').strip()
         wordle_description = request.form.get('wordle_description').strip()
-        wordle_word = request.form.get('wordle_word').strip()
+        wordle_word = request.form.get('wordle_value').strip()
 
         # server-side validation
         if not wordle_name or not wordle_description or not wordle_word:

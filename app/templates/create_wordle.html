@@ -81,5 +81,17 @@ background: rgba(254, 254, 254, 0.15);
         </div>
         </div>
     </nav>
+
+    <div>
+      <form action="{{ url_for('create_wordle') }}" method="POST">
+        <label for="Name">Name:</label>
+        <input type="text" id="wordle_name" name="wordle_name">
+        <label for="Description">Description:</label>
+        <input type="text" id="wordle_description" name="wordle_description">
+        <label for="Word">Wordle Word:</label>
+        <input type="text" id="wordle_value" name="wordle_value" maxlength="5">
+        <button type="submit" class="button">Create</button>
+      </form>
+    </div>
 </body>
 </html>
